@@ -90,7 +90,7 @@ export default {
     },
     async createJWT() {
       try {
-        let result = await this.$http.post(process.env.API_ROOT + 'api/v1/dnaid/token', { user_ontid: this.dnaId })
+        let result = await this.$http.post(process.env.API_ROOT + 'api/v1/dnaid/token', { user_dnaid: this.dnaId, password: this.ruleForm.password })
         console.log('jwt', result)
         if (result.data.desc === 'SUCCESS' && result.data.result) {
           this.access_token = result.data.result.access_token
