@@ -126,6 +126,7 @@ export default {
     },
     toReview() {
       this.$router.push({ name: 'reviewEvidence', params: { cunZheng: this.fileData } });
+      console.log('fileData', this.fileData)
     }
   }
 }

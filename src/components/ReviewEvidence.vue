@@ -85,6 +85,7 @@ export default {
     this.access_token = sessionStorage.getItem('access_token');
     this.ontId = sessionStorage.getItem('ontid');
     let _fileData = this.$route.params.cunZheng;
+    console.log('_fileData', this.$route.params.cunZheng)
     let type = sessionStorage.getItem('TYPE')
     if (type === '2c') {
       this.is2c = true
@@ -116,9 +117,11 @@ export default {
       this.postFileHashs();
     },
     postFileHashs() {
+      console.log('this.newCunZheng', this.newCunZheng)
+      // return
       this.fullscreenLoading = true;
-      this.$http.post(process.env.API_ROOT + 'api/v1/attestations/put/custom', {
-        "user_ontid": this.ontId,
+      this.$http.post(process.env.API_ROOT + 'api/v1/attestations/put', {
+        "user_dnaid": this.ontId,
         "access_token": this.access_token,
         "filelist": this.newCunZheng
       })
@@ -230,8 +233,25 @@ export default {
       let detail = [];
       let _cunZhengList = this.cunZhengList;
       let type;//存放的类型 INDEX：目录 IMAGE:图片
+      console.log('_cunZhengList', _cunZhengList)
       _cunZhengList.map((outer, i) => {
-        let detailLine = {};//每一行
+        let lintObj = {          
+          context: {
+            text: [],
+            image: []
+          }, 
+          signature: '', 
+          type: 'INDEX', 
+          metadata: {
+            name: '',
+            title: '',
+            tags: '',
+            description: '',
+            timestamp: '',
+            location: ''
+          }        
+        };//每一行
+
         let textLine = [];//相当于一行里的文本值
         let imageList = [];//每一行存放的图片哈希值
         let index = 0;
@@ -240,33 +260,36 @@ export default {
             textLine.push(_cunZhengList[i][j]);//文本
           } else {
             //hash
-            let imageHash = sha256(_cunZhengList[i][j]);
-            imageList.push(imageHash);
-            let fileObj = {};
-            let detail = [];
-            let img = {}
-            img.imgUrl = _cunZhengList[i][j];
-            detail.push(img);
+            // let imageHash = sha256(_cunZhengList[i][j]);
+            imageList.push(_cunZhengList[i][j]);
+            // let fileObj = {};
+            // let detail = [];
+            // let img = {}
+            // img.imgUrl = _cunZhengList[i][j];
+            // detail.push(img);
 
-            fileObj.filehash = sha256(_cunZhengList[i][j]);
-            fileObj.detail = detail;
+            // fileObj.filehash = sha256(_cunZhengList[i][j]);
+            // fileObj.detail = detail;
             // fileObj.detail=_cunZhengList[i][j];
-            fileObj.type = 'IMAGE';//图片
-            newCunZheng.push(fileObj);
+            // fileObj.type = 'IMAGE';//图片
+            // newCunZheng.push(fileObj);
           }
           index++;
         }
-        detailLine.textLine = textLine;//文本
-        detailLine.imageList = imageList;//图片哈希
-        let detail = [];
-        detail.push(detailLine);
-        // let detail=JSON.stringify(detailLine);//每一行  转字符串的detail
-        let filehash = sha256(JSON.stringify(detail)); //一行hash-》filehash
-        let fileObj = {};
-        fileObj.filehash = filehash;
-        fileObj.detail = detail;
-        fileObj.type = 'INDEX';//目录
-        newCunZheng.push(fileObj);
+        console.log('textLine', textLine)
+        console.log('imageList', imageList)
+        lintObj.context.text.push(...textLine);//文本
+        lintObj.context.image.push(...imageList);//图片哈希
+        lintObj.filehash = sha256(JSON.stringify(lintObj.context))
+        // let detail = [];
+        // detail.push(lintObj);
+        // let detail=JSON.stringify(lintObj);//每一行  转字符串的detail
+        // let filehash = sha256(JSON.stringify(detail)); //一行hash-》filehash
+        // let fileObj = {};
+        // fileObj.filehash = filehash;
+        // fileObj.detail = detail;
+        // fileObj.type = 'INDEX';//目录
+        newCunZheng.push(lintObj);
       })
       return newCunZheng
     }

@@ -21,7 +21,7 @@
       <div class="content_data">
         <el-table v-loading="$store.state.loading" :data="listContent" style="width: 100%">
           <el-table-column align="center" prop="_txhash" label="存证编号" width="300"></el-table-column>
-          <el-table-column prop="_ontId" label="ONTID" width="300" align="center"></el-table-column>
+          <el-table-column prop="_ontId" label="DNAID" width="300" align="center"></el-table-column>
           <el-table-column prop="createTime" label="创建时间" width="300" align="center"></el-table-column>
           <el-table-column prop="详情" label="存证详情" align="center">
             <template slot-scope="scope">

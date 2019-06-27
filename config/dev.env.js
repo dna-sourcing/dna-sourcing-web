@@ -4,11 +4,12 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  API_ROOT:'"http://172.168.3.68:7088/"',
-  fileUrl:'"/static/ontsourcing%E7%82%B9%E6%99%B4%E6%A8%A1%E6%9D%BF0426.xlsx"',
+  API_ROOT:'"http://42.159.142.241:7071/"',
+  fileUrl:'"/static/dna-sourcing-template.xlsx"',
   ONTID_SIGININ: '"http://139.219.136.188:10390?params="',
   APP_ONTID: '"did:ont:ANqiHycikgyzkfz36faP5ymXLVg1uovhXh"',
-  TOC_API_ROOT: '"http://172.168.3.68:9088/"'
+  TOC_API_ROOT: '"http://42.159.142.241:9088/"',
+  JWT_API: '"http://42.159.142.241:7091"'
 })
 
 // process.env.API_ROOT

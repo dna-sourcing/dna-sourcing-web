@@ -2,15 +2,15 @@
   <div id="topBar">
     <el-row type="flex" class="row-bg" justify="end" v-if="noLogin">
       <el-col :span="16">
-        <img id="logo" src="../assets/img/Rectangle.png" alt @click="toHomePage">
+        <img id="logo" src="../assets/img/Rectangle.jpg" alt @click="toHomePage">
       </el-col>
       <el-col :span="8">
-        <el-button type="info" size="mini" round @click="toLogin">我要存证</el-button>
+        <el-button type="info" size="mini" round @click="$router.push({ path:'/signin'})">我要存证</el-button>
       </el-col>
     </el-row>
     <el-row type="flex" class="row-bg" justify="end" v-else>
       <el-col :span="12">
-        <img id="logo" src="../assets/img/Rectangle.png" alt @click="toHomePage">
+        <img id="logo" src="../assets/img/Rectangle.jpg" alt @click="toHomePage">
       </el-col>
       <el-col :span="12" style="text-align:right;">
         <img src="../assets/img/avatar.png" style="width:3rem;" alt>
@@ -71,6 +71,7 @@ export default {
     if (sessionStorage.getItem("ontid")) {
       this.noLogin = false;
       this.username = sessionStorage.getItem("ontid");
+      this.username = this.username.replace(/ont/, 'dna')
     }
     else {
       var result = this.$route.query.result;
@@ -85,6 +86,7 @@ export default {
         sessionStorage.setItem("ontid", response.ontid);
         sessionStorage.setItem("access_token", response.access_token);
         this.username = sessionStorage.getItem("ontid");
+        this.username = this.username.replace(/ont/, 'dna')
         this.noLogin = false;
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="detailEvidence">
     <div class="topBar">
-      <img src="../assets/img/Rectangle.png" id="detailLogo" alt @click="toHomePage">
+      <img src="../assets/img/Rectangle.jpg" id="detailLogo" alt @click="toHomePage">
     </div>
     <div class="detainCon" v-loading="fullscreenLoading">
       <div class="detailImg" v-if="haveImg">
@@ -44,14 +44,14 @@
           </div>
           <div class="con">
             <div>
-              存证者 ONTID：
-              <p>{{detailData.ontid}}</p>
+              存证者 DNAID：
+              <p>{{detailData.dnaid}}</p>
             </div>
           </div>
           <div class="con">
             <div>
-              被存证者 ONTID：
-              <p>{{detailData.companyOntid}}</p>
+              被存证者 DNAID：
+              <p>{{detailData.companyDnaid}}</p>
             </div>
           </div>
           <div class="con">
@@ -104,7 +104,7 @@ export default {
   data() {
     return {
       fullscreenLoading: false,//加载
-      haveImg: true,//是否有证书图片
+      haveImg: false,//是否有证书图片
       hash: '',
       workData: [],//图片上的内容
       detailData: {},//详情数据
@@ -131,12 +131,12 @@ export default {
             this.detailData.imgUrl = JSON.parse(this.detailData.detail)[0].imgUrl;
           } else if (this.detailData.type == 'INDEX') {//目录
             this.haveImg = true;
-            let textData = JSON.parse(this.detailData.detail)[0].textLine;
+            let textData = JSON.parse(this.detailData.detail).context.text;
             if (!textData) {
-              textData = JSON.parse(this.detailData.detail)[0].textline;
+              textData = JSON.parse(this.detailData.detail).context.text;
             }
             this.workData = textData;
-            var imgHashData = JSON.parse(this.detailData.detail)[0].imageList;
+            var imgHashData = JSON.parse(this.detailData.detail).context.image;
             for (var i in imgHashData) {
               this.workData.push(imgHashData[i]);//图片哈希
             }
@@ -157,7 +157,7 @@ export default {
     if (type === '2c') {
       this.toUrl = process.env.TOC_API_ROOT + 'api/v1/c/attestation/explorer/hash'
     } else {
-      this.toUrl = process.env.API_ROOT + 'api/v1/contract/explorer/hash'
+      this.toUrl = process.env.API_ROOT + 'api/v1/attestation/explorer/hash'
     }
     this.getDetail()
   }

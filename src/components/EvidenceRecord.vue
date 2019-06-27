@@ -19,11 +19,11 @@
           <el-table-column prop="createTime" label="创建时间" width="300" align="center"></el-table-column>
           <el-table-column prop="height" label="区块高度" width="100" align="center"></el-table-column>
           <el-table-column prop="timestamp" label="时间戳" width="300" align="center"></el-table-column>
-          <el-table-column prop="ontid" label="存证者ONTID" width="400" align="center"></el-table-column>
+          <el-table-column prop="dnaid" label="存证者DNAID" width="400" align="center"></el-table-column>
           <el-table-column
-            prop="companyOntid"
+            prop="companyDnaid"
             v-if="isShow"
-            label="被存证者ONTID"
+            label="被存证者DNAID"
             width="400"
             align="center"
           ></el-table-column>
@@ -84,8 +84,8 @@ export default {
       this.url = process.env.TOC_API_ROOT + 'api/v1/c/attestation/history'
       this.totalUrl = process.env.TOC_API_ROOT + 'api/v1/c/attestation/count'
     } else {
-      this.url = process.env.API_ROOT + 'api/v1/contract/history'
-      this.totalUrl = process.env.API_ROOT + 'api/v1/contract/count'
+      this.url = process.env.API_ROOT + 'api/v1/attestation/history'
+      this.totalUrl = process.env.API_ROOT + 'api/v1/attestation/count'
     }
     this.getTotalNum(this.access_token);//获取总数
     this.handleCurrentChange(1);//默认获取第一页
@@ -137,6 +137,9 @@ export default {
           this.listDetail.forEach(item => {
             item.createTime = dateFormat.format('yyyy-MM-dd hh:mm:ss', new Date(item.createTime));
             item.timestamp = dateFormat.format('yyyy-MM-dd hh:mm:ss', new Date(item.timestamp));
+            // ontid companyOntid
+            // item.ontid =  item.ontid.replace(/ont/, 'dna')
+            // item.companyOntid =  item.companyOntid.replace(/ont/, 'dna')
           });
         })
         .catch((error) => {

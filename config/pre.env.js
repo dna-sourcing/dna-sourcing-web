@@ -1,9 +1,10 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"pre"',
-  API_ROOT:'"http://40.73.69.106:7088/"',
-  fileUrl:'"/static/ontsourcing%E7%82%B9%E6%99%B4%E6%A8%A1%E6%9D%BF0426.xlsx"',
+  API_ROOT:'"http://42.159.142.241:7071/"',
+  fileUrl:'"/static/dna-sourcing-template.xlsx"',
   ONTID_SIGININ: '"https://signint.ont.io/?params="',
   APP_ONTID: '"did:ont:ANqiHycikgyzkfz36faP5ymXLVg1uovhXh"',
-  TOC_API_ROOT: '"http://40.73.69.106:9088/"'
+  TOC_API_ROOT: '"http://40.73.69.106:9088/"',
+  JWT_API: '"http://172.168.3.68:7091"'
 }
