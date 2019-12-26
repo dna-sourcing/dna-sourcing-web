@@ -12,20 +12,48 @@
           value
           id="id_hash"
           style="vertical-align: middle;"
+        />
+        <el-button
+          size="small"
+          type="primary"
+          round
+          class="searchIcon"
+          @click="search"
+          >搜索</el-button
         >
-        <el-button size="small" type="primary" round class="searchIcon" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content" v-if="firstFlag">
       <p class="content_title">最新存证</p>
       <div class="content_data">
-        <el-table v-loading="$store.state.loading" :data="listContent" style="width: 100%">
-          <el-table-column align="center" prop="_txhash" label="存证编号" width="300"></el-table-column>
-          <el-table-column prop="_ontId" label="DNAID" width="300" align="center"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="300" align="center"></el-table-column>
+        <el-table
+          v-loading="$store.state.loading"
+          :data="listContent"
+          style="width: 100%"
+        >
+          <el-table-column
+            align="center"
+            prop="_txhash"
+            label="存证编号"
+            width="300"
+          ></el-table-column>
+          <el-table-column
+            prop="_ontId"
+            label="DNA ID"
+            width="300"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            width="300"
+            align="center"
+          ></el-table-column>
           <el-table-column prop="详情" label="存证详情" align="center">
             <template slot-scope="scope">
-              <el-button @click="lookConDetail(scope.$index)" type="text">点击查看详情</el-button>
+              <el-button @click="lookConDetail(scope.$index)" type="text"
+                >点击查看详情</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -34,16 +62,33 @@
     <div class="searchContent" v-else>
       <p class="searchTop">
         <span class="search_title">存证信息</span>
-        <span class="num">共{{allNum}}条</span>
+        <span class="num">共{{ allNum }}条</span>
       </p>
       <div class="search_data">
         <el-table v-loading="loading" :data="searchContent" style="width: 100%">
-          <el-table-column prop="_txhash" label="存证编号" width="300" align="center"></el-table-column>
-          <el-table-column prop="_ontId" label="ONTID" width="300" align="center"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="300" align="center"></el-table-column>
+          <el-table-column
+            prop="_txhash"
+            label="存证编号"
+            width="300"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="_ontId"
+            label="DNA ID"
+            width="300"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            width="300"
+            align="center"
+          ></el-table-column>
           <el-table-column label="存证详情" align="center">
             <template slot-scope="scope">
-              <el-button @click="lookSearDetail(scope.$index)" type="text">点击查看详情</el-button>
+              <el-button @click="lookSearDetail(scope.$index)" type="text"
+                >点击查看详情</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -52,47 +97,49 @@
   </div>
 </template>
 <script>
-import TopBar from './TopBar'
-import dateFormat from '../util/dateFormat'
-import { mapGetters } from 'vuex'
+import TopBar from "./TopBar";
+import dateFormat from "../util/dateFormat";
+import { mapGetters } from "vuex";
 // import { clearInterval } from 'timers';
 export default {
   components: {
-    TopBar,
+    TopBar
   },
   data() {
     return {
-      firstFlag: true,//首次显示内容true false:搜索内容
-      inputvalue: '',//输入框值
-      allNum: 0,//信息条数
+      firstFlag: true, //首次显示内容true false:搜索内容
+      inputvalue: "", //输入框值
+      allNum: 0, //信息条数
       searchContent: [],
-      loading: false,//搜索加载
+      loading: false, //搜索加载
       detailFlag: true,
-      type: '',
-      searchUrl: '',
+      type: "",
+      searchUrl: "",
       intervalBlock2c: null,
       intervalBlock2b: null
-    }
+    };
   },
   created() {
     //请求首页列表
-    let params = { "pageNum": 1, "pageSize": 10 };
-    this.type = sessionStorage.getItem('TYPE')
-    if (this.type === '2c') {
-      this.$store.dispatch('get2cHomeData', params);
-      
-      clearInterval(this.intervalBlock2b)
+    let params = { pageNum: 1, pageSize: 10 };
+    this.type = sessionStorage.getItem("TYPE");
+    if (this.type === "2c") {
+      this.$store.dispatch("get2cHomeData", params);
+
+      clearInterval(this.intervalBlock2b);
       this.intervalBlock2c = setInterval(() => {
-        this.$store.dispatch('get2cHomeData', params);
+        this.$store.dispatch("get2cHomeData", params);
       }, 10000);
-      this.searchUrl = process.env.TOC_API_ROOT+'api/v1/c/attestation/explorer/hash'
+      this.searchUrl =
+        process.env.TOC_API_ROOT + "api/v1/c/attestation/explorer/hash";
     } else {
-      this.$store.dispatch('getHomePageRecord', params);
-      clearInterval(this.intervalBlock2c)
+      this.$store.dispatch("getHomePageRecord", params);
+      clearInterval(this.intervalBlock2c);
       this.intervalBlock2b = setInterval(() => {
-        this.$store.dispatch('getHomePageRecord', params);
+        this.$store.dispatch("getHomePageRecord", params);
       }, 10000);
-      this.searchUrl = process.env.API_ROOT + 'api/v1/contract/explorer/hash'
+      this.searchUrl =
+        process.env.API_ROOT + "api/v1/attestation/explorer/hash";
     }
   },
   beforeDestroy() {
@@ -100,58 +147,78 @@ export default {
     clearInterval(this.intervalBlock2b);
   },
   computed: {
-    ...mapGetters({ listContent: 'getHomePageRecord' }) // 动态计算属性，相当于this.$store.getters.getHomePageRecord
+    ...mapGetters({ listContent: "getHomePageRecord" }) // 动态计算属性，相当于this.$store.getters.getHomePageRecord
   },
   methods: {
     //搜索内容
     search() {
-      if (this.inputvalue.trim() != '') {
-        this.firstFlag = false;//变成search内容
+      if (this.inputvalue.trim() != "") {
+        this.firstFlag = false; //变成search内容
         this.loading = true;
-        this.getSearchData()
+        this.getSearchData();
       } else {
-        this.$confirm('请输入存证编号进行搜索', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {//确定
-          this.firstFlag = true;
-        }).catch(() => {
-          this.firstFlag = true;
-        });
+        this.$confirm("请输入存证编号进行搜索", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            //确定
+            this.firstFlag = true;
+          })
+          .catch(() => {
+            this.firstFlag = true;
+          });
       }
     },
-    lookConDetail(index) {//内容点击详情
-      this.$router.push({ path: '/detailEvidence/' + this.listContent[index].txhash });
+    lookConDetail(index) {
+      //内容点击详情
+      this.$router.push({
+        path: "/detailEvidence/" + this.listContent[index].txhash
+      });
     },
-    lookSearDetail(index) {//搜索点击详情
-      this.$router.push({ path: '/detailEvidence/' + this.searchContent[index].txhash });
+    lookSearDetail(index) {
+      //搜索点击详情
+      this.$router.push({
+        path: "/detailEvidence/" + this.searchContent[index].txhash
+      });
     },
     getSearchData() {
-      this.$http.post(this.searchUrl,
-        { "hash": this.inputvalue })
-        .then((response) => {
+      clearInterval(this.intervalBlock2c);
+      clearInterval(this.intervalBlock2b);
+      this.$http
+        .post(this.searchUrl, { hash: this.inputvalue })
+        .then(response => {
           this.loading = false;
-          if (response.data.result != '') {
+          if (response.data.result != "") {
             this.searchContent = response.data.result;
             this.searchContent.forEach(item => {
-              item.createTime = dateFormat.format('yyyy-MM-dd hh:mm:ss', new Date(item.createTime));
-              item._txhash = item.txhash.substring(0, 10) + '.....' + item.txhash.substring(item.txhash.length - 5);
-              item._ontId = item.ontid.substring(0, 10) + '.....' + item.ontid.substring(item.ontid.length - 5);
-            })
+              item.createTime = dateFormat.format(
+                "yyyy-MM-dd hh:mm:ss",
+                new Date(item.createTime)
+              );
+              item._txhash =
+                item.txhash.substring(0, 10) +
+                "....." +
+                item.txhash.substring(item.txhash.length - 5);
+              item._ontId =
+                item.dnaid.substring(0, 10) +
+                "....." +
+                item.dnaid.substring(item.dnaid.length - 5);
+            });
             this.allNum = this.searchContent.length;
           } else {
             this.searchContent = [];
             this.allNum = 0;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.loading = false;
-          this.$message({ type: 'error', message: error });
+          this.$message({ type: "error", message: error });
         });
     }
   }
-}
+};
 </script>
 <style scoped>
 button.el-button.el-button--default {

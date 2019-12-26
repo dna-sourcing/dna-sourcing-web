@@ -1,10 +1,10 @@
 <template>
   <div class="sign">
     <div class="sign_box">
-      <i @click="$router.push({ path:'/'})" class="tohome el-icon-upload"></i>
+      <i @click="$router.push({ path: '/' })" class="tohome el-icon-upload"></i>
       <div class="title">
         <span class="active">Sign Up</span>/
-        <span @click="$router.push({ path:'/signin'})">Sign In</span>
+        <span @click="$router.push({ path: '/signin' })">Sign In</span>
       </div>
       <div class="form_box">
         <el-form
@@ -21,7 +21,9 @@
             <el-input v-model="ruleForm.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">Sign Up</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')"
+              >Sign Up</el-button
+            >
             <el-button @click="resetForm('ruleForm')">Reset</el-button>
           </el-form-item>
         </el-form>
@@ -35,32 +37,29 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: ""
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: "请输入用户名", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-        ],
-
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
-      dnaId: '',
-      access_token: ''
+      dnaId: "",
+      access_token: ""
       // sessionStorage.setItem("ontid", response.ontid);
       // sessionStorage.setItem("access_token", response.access_token);
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           //   alert('submit!');
-          this.createDNAID()
+          this.createDNAID();
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
@@ -70,51 +69,51 @@ export default {
     },
     async createDNAID() {
       try {
-        let result = await this.$http.post(process.env.API_ROOT + '/api/v1/dnaid/create', this.ruleForm)
-        console.log('signresult', result)
-        if (result.data.desc === 'SUCCESS' && result.data.result) {
-          this.dnaId = result.data.result
-          this.createJWT()
+        let result = await this.$http.post(
+          process.env.API_ROOT + "/api/v1/dnaid/create",
+          this.ruleForm
+        );
+        console.log("signresult", result);
+        if (result.data.desc === "SUCCESS" && result.data.result) {
+          this.dnaId = result.data.result;
+          this.createJWT();
           // let access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJkaWQ6b250OkFVRG11NEoyVzF2cUpIRHRMUDhVeEhhdWoyZUtzUUh4dTYiLCJpc3MiOiJkaWQ6b250OkFhdlJRcVhlOVByYVY1dFlnQnF2VjRiVXE4TFNzdmpjV1MiLCJleHAiOjE1NTcyODM2MTAsImlhdCI6MTU1NzE5NzIxMCwianRpIjoiYmQ5NTZhNGI1YzYxNGYxN2I2YTgxNDkyZDI5NDIyYTQiLCJjb250ZW50Ijp7InR5cGUiOiJhY2Nlc3NfdG9rZW4iLCJvbnRpZCI6ImRpZDpvbnQ6QWExWFBhcEpIR0dqSFF0TjJIZHliOUFQdjdIZmlZeHRSeiJ9fQ.MDFiMjFkMjg5OGJmYjZlZGQzMmM5ZjY0ZWIxMDA0OGYxNGNkOGE2MTBhYTZmZGNiZTg4OWQyNzI0MjMwZDVjMjk3Y2Q3ZDhjMzlhOGYzZDJkYjE1YzFhMTcxM2Y3OTU4ZjkzYzRjOGI2NmU2ODM5YmFhNjE4NWRjMTlkZjU3YThkYQ"
           // sessionStorage.setItem("ontid", this.dnaId);
           // sessionStorage.setItem("access_token", access_token);
           // this.$router.push({ path: '/' })
         } else {
-          this.$message({ type: 'error', message: result.data.desc });
-          return
+          this.$message({ type: "error", message: result.data.desc });
+          return;
         }
       } catch (error) {
-        this.$message({ type: 'error', message: error });
-        throw error
+        this.$message({ type: "error", message: error });
+        throw error;
       }
     },
     async createJWT() {
       try {
-        let result = await this.$http.post(process.env.API_ROOT + 'api/v1/dnaid/token', { user_dnaid: this.dnaId, password: this.ruleForm.password })
-        console.log('jwt', result)
-        if (result.data.desc === 'SUCCESS' && result.data.result) {
-          this.access_token = result.data.result.access_token
+        let result = await this.$http.post(
+          process.env.API_ROOT + "api/v1/dnaid/token",
+          { user_dnaid: this.dnaId, password: this.ruleForm.password }
+        );
+        if (result.data.desc === "SUCCESS" && result.data.result) {
+          this.access_token = result.data.result.access_token;
           sessionStorage.setItem("ontid", this.dnaId);
           sessionStorage.setItem("access_token", this.access_token);
-          console.log('a')
-          this.$router.push({ name: "Home" })
-          console.log('b')
-          this.$message({ type: 'success', message: 'Successful' });
+          this.$router.push({ name: "Home" });
+          this.$message({ type: "success", message: "Successful" });
         } else {
-          this.$message({ type: 'error', message: result.data.msg });
-          return
+          return this.$message({ type: "error", message: result.data.msg });
         }
       } catch (error) {
-        this.$message({ type: 'error', message: error });
-        throw error
-        return
+        return this.$message({ type: "error", message: error });
       }
     }
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .sign {
   .sign_box {
     width: 500px;
