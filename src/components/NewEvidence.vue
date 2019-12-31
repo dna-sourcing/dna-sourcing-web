@@ -14,7 +14,8 @@
                     id="download"
                     @click="download"
                     style="color:#409eff;text-decoration:underline;"
-                  >存证模板Excel</span>
+                    >存证模板Excel</span
+                  >
                 </template>
               </el-step>
               <el-step title>
@@ -29,7 +30,9 @@
                     :on-change="readExcel"
                     :auto-upload="false"
                   >
-                    <el-button round slot="trigger" size="small" type="primary">上传存证Excel</el-button>
+                    <el-button round slot="trigger" size="small" type="primary"
+                      >上传存证Excel</el-button
+                    >
                   </el-upload>
                 </template>
               </el-step>
@@ -38,7 +41,9 @@
                   <el-button round size="small" type="info">确认提交</el-button>
                 </template>
                 <template slot="title" v-else>
-                  <el-button round size="small" type="primary" @click="toReview">确认提交</el-button>
+                  <el-button round size="small" type="primary" @click="toReview"
+                    >确认提交</el-button
+                  >
                 </template>
               </el-step>
             </el-steps>
@@ -50,23 +55,24 @@
   </div>
 </template>
 <script>
-import TopBar from './TopBar'
-import XLSX from 'xlsx'
+import TopBar from "./TopBar";
+import XLSX from "xlsx";
 export default {
   data() {
     return {
       loading: false,
-      activeBar: "first",//默认显示第一个
-      fileList: [],//上传文件
-      hasfile: true,//是否有文件上传
-      fileData: [],//读取的excel内容
-    }
+      activeBar: "first", //默认显示第一个
+      fileList: [], //上传文件
+      hasfile: true, //是否有文件上传
+      fileData: [] //读取的excel内容
+    };
   },
   components: {
     TopBar
   },
   mounted() {
-    if (this.fileData.length > 0) {//有文件上传
+    if (this.fileData.length > 0) {
+      //有文件上传
       this.hasfile = false;
     } else {
       this.hasfile = true;
@@ -76,32 +82,39 @@ export default {
     readExcel(file, fileList) {
       this.loading = true;
       var fileReader = new FileReader();
-      fileReader.onload = (ev) => {
+      fileReader.onload = ev => {
         try {
           //判断上传的是否是excel文件
           for (var i in fileList) {
             if (!/\.(xls|xlsx)$/.test(fileList[i].name)) {
-              this.$confirm('文件类型不正确，请上传Excel的文件格式！', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {//确定
-                this.fileList = [];
-              }).catch(() => {
-                this.fileList = [];
-              });
+              this.$confirm("文件类型不正确，请上传Excel的文件格式！", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+              })
+                .then(() => {
+                  //确定
+                  this.fileList = [];
+                })
+                .catch(() => {
+                  this.fileList = [];
+                });
             }
           }
           var data = ev.target.result;
           var workbook = XLSX.read(data, {
-            type: 'binary'
+            type: "binary"
           });
           for (let sheet in workbook.Sheets) {
-            const sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-              header: 1
-            });  //获得以第一列为键名的sheet数组对象 
+            const sheetArray = XLSX.utils.sheet_to_json(
+              workbook.Sheets[sheet],
+              {
+                header: 1
+              }
+            ); //获得以第一列为键名的sheet数组对象
             this.fileData = sheetArray;
-            if (this.fileData.length > 0) {//有文件上传
+            if (this.fileData.length > 0) {
+              //有文件上传
               this.hasfile = false;
             } else {
               this.hasfile = true;
@@ -110,26 +123,28 @@ export default {
           setTimeout(() => {
             this.loading = false;
           }, 1000);
-        } catch (e) {
-
-        }
+        } catch (e) {}
       };
       fileReader.readAsBinaryString(file.raw);
     },
-    changeTab(tab, event) {//存证记录tab
+    changeTab(tab, event) {
+      //存证记录tab
       if (tab.index == 1) {
-        this.$router.push({ name: 'evidenceRecord' });
+        this.$router.push({ name: "evidenceRecord" });
       }
     },
     download() {
       window.open(window.location.origin + process.env.fileUrl);
     },
     toReview() {
-      this.$router.push({ name: 'reviewEvidence', params: { cunZheng: this.fileData } });
-      console.log('fileData', this.fileData)
+      this.$router.push({
+        name: "reviewEvidence",
+        params: { cunZheng: this.fileData }
+      });
+      // console.log('fileData', this.fileData)
     }
   }
-}
+};
 </script>
 <style>
 .cunZhengTab {
@@ -185,5 +200,3 @@ div#pane-first {
   height: 40rem;
 }
 </style>
-
-

@@ -1,9 +1,9 @@
 <template>
   <div class="sign">
     <div class="sign_box">
-      <i @click="$router.push({ path:'/'})" class="tohome el-icon-upload"></i>
+      <i @click="$router.push({ path: '/' })" class="tohome el-icon-upload"></i>
       <div class="title">
-        <span @click="$router.push({ path:'/signup'})">Sign Up</span>/
+        <span @click="$router.push({ path: '/signup' })">Sign Up</span>/
         <span class="active">Sign In</span>
       </div>
       <div class="form_box">
@@ -21,7 +21,9 @@
             <el-input v-model="ruleForm.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">Sign In</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')"
+              >Sign In</el-button
+            >
             <el-button @click="resetForm('ruleForm')">Reset</el-button>
           </el-form-item>
         </el-form>
@@ -35,30 +37,27 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: ""
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: "请输入用户名", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-        ],
-
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
-      dnaId: '',
-      access_token: ''
+      dnaId: "",
+      access_token: ""
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           //   alert('submit!');
-          this.sign()
+          this.sign();
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
@@ -68,30 +67,33 @@ export default {
     },
     async sign() {
       try {
-        let result = await this.$http.post(process.env.API_ROOT + 'api/v1/dnaid/login', this.ruleForm)
-        console.log('signin', result)
-        if (result.data.desc === 'SUCCESS') {
-          this.dnaId = result.data.result.user_dnaid
-          this.access_token = result.data.result.access_token
+        let result = await this.$http.post(
+          process.env.API_ROOT + "api/v1/dnaid/login",
+          this.ruleForm
+        );
+        // console.log('signin', result)
+        if (result.data.desc === "SUCCESS") {
+          this.dnaId = result.data.result.user_dnaid;
+          this.access_token = result.data.result.access_token;
           sessionStorage.setItem("ontid", this.dnaId);
           sessionStorage.setItem("access_token", this.access_token);
-          this.$router.push({ path: '/' })
-          this.$message({ type: 'success', message: 'Successful' });
+          this.$router.push({ path: "/" });
+          this.$message({ type: "success", message: "Successful" });
         } else {
-          this.$message({ type: 'error', message: 'Sign Fail' });
-          return
+          this.$message({ type: "error", message: "Sign Fail" });
+          return;
         }
       } catch (error) {
-        this.$message({ type: 'error', message: error });
-        throw error
-        return false
+        this.$message({ type: "error", message: error });
+        throw error;
+        return false;
       }
     }
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .sign {
   .sign_box {
     width: 500px;

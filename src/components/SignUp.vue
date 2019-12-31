@@ -73,7 +73,7 @@ export default {
           process.env.API_ROOT + "/api/v1/dnaid/create",
           this.ruleForm
         );
-        console.log("signresult", result);
+        // console.log("signresult", result);
         if (result.data.desc === "SUCCESS" && result.data.result) {
           this.dnaId = result.data.result;
           this.createJWT();
