@@ -1,7 +1,12 @@
 <template>
   <div class="detailEvidence">
     <div class="topBar">
-      <img src="../assets/img/Rectangle.jpg" id="detailLogo" alt @click="toHomePage">
+      <img
+        src="../assets/img/Rectangle.jpg"
+        id="detailLogo"
+        alt
+        @click="toHomePage"
+      />
     </div>
     <div class="detainCon" v-loading="fullscreenLoading">
       <div class="detailImg" v-if="haveImg">
@@ -9,15 +14,15 @@
         <div class="imgDetail">
           <div class="work-group absolute">
             <div class="group">Group :</div>
-            <div class="group">{{workData[0]}}</div>
+            <div class="group">{{ workData[0] }}</div>
           </div>
-          <div class="work-name absolute">{{workData[1]}}</div>
+          <div class="work-name absolute">{{ workData[1] }}</div>
           <div class="work-trustAnchor absolute">
             <div class="trustAnchor">Trust Anchor :</div>
-            <div class="trustAnchor">{{workData[2]}}</div>
+            <div class="trustAnchor">{{ workData[2] }}</div>
           </div>
           <div class="work-desc absolute">
-            <div class="desc">Description:{{workData[3]}}</div>
+            <div class="desc">Description:{{ workData[3] }}</div>
           </div>
           <div class="work-crypto absolute">
             <div class="crypto">crypto_function</div>
@@ -25,11 +30,11 @@
           </div>
           <div class="work-uploadtime absolute">
             <div class="crypto">uploadTime</div>
-            <div class="upload">{{detailData._createTime}}</div>
+            <div class="upload">{{ detailData._createTime }}</div>
           </div>
           <div class="work-logo absolute"></div>
           <div class="work-hash absolute">
-            <div class="hash">WorkHash:{{detailData.txhash}}</div>
+            <div class="hash">WorkHash:{{ detailData.txhash }}</div>
           </div>
         </div>
       </div>
@@ -39,55 +44,64 @@
           <div class="con">
             <div>
               存证编号：
-              <p>{{detailData.txhash}}</p>
+              <p>{{ detailData.txhash }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               存证者 DNAID：
-              <p>{{detailData.dnaid}}</p>
+              <p>{{ detailData.dnaid }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               被存证者 DNAID：
-              <p>{{detailData.companyDnaid}}</p>
+              <p>{{ detailData.companyDnaid }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               创建时间：
-              <p>{{detailData.createTime}}</p>
+              <p>{{ detailData.createTime }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               区块高度：
-              <p>{{detailData.height}}</p>
+              <p>{{ detailData.height }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               时间戳：
-              <p>{{detailData.timestamp}}</p>
+              <p>{{ detailData.timestamp }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               存证哈希：
-              <p>{{detailData.filehash}}</p>
+              <p>{{ detailData.filehash }}</p>
             </div>
           </div>
           <div class="con">
             <div>
               详情：
               <p v-if="detailData.type == 'IMAGE'">
-                <a :href="detailData.imgUrl">{{detailData.imgUrl}}</a>
+                <a :href="detailData.imgUrl">{{ detailData.imgUrl }}</a>
               </p>
               <div class="timestampSign">
                 <div class="detailList" v-if="detailData.type == 'INDEX'">
                   <div v-for="(item, index) in workData" :key="index">
-                    <p>{{item}}</p>
+                    <p>{{ item }}</p>
+                    <!-- <img :src="item" alt="" /> -->
+                  </div>
+                  <div class="imgBox">
+                    <img
+                      v-for="(item, index) in imgArr"
+                      :src="item"
+                      :key="index"
+                      alt=""
+                    />
                   </div>
                 </div>
               </div>
@@ -99,37 +113,53 @@
   </div>
 </template>
 <script>
-import dateFormat from '../util/dateFormat'
+import dateFormat from "../util/dateFormat";
 export default {
   data() {
     return {
-      fullscreenLoading: false,//加载
-      haveImg: false,//是否有证书图片
-      hash: '',
-      workData: [],//图片上的内容
-      detailData: {},//详情数据
-      toUrl: ''
+      fullscreenLoading: false, //加载
+      haveImg: false, //是否有证书图片
+      hash: "",
+      workData: [], //图片上的内容
+      detailData: {}, //详情数据
+      toUrl: "",
+      imgArr: []
     };
   },
   methods: {
     toHomePage() {
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: "Home" });
     },
     getDetail() {
-      this.$http.post(this.toUrl, {
-        'hash': this.hash      })
-        .then((response) => {
+      this.$http
+        .post(this.toUrl, {
+          hash: this.hash
+        })
+        .then(response => {
           this.fullscreenLoading = false;
           this.detailData = response.data.result[0];
-          this.detailData._createTime = this.detailData.createTime.split('T')[0];
-          this.detailData.createTime = dateFormat.format('yyyy-MM-dd hh:mm:ss', new Date(this.detailData.createTime));
-          this.detailData.timestamp = dateFormat.format('yyyy-MM-dd hh:mm:ss', new Date(this.detailData.timestamp));
-          if (this.detailData.type == '') {//类型为空
+          this.detailData._createTime = this.detailData.createTime.split(
+            "T"
+          )[0];
+          this.detailData.createTime = dateFormat.format(
+            "yyyy-MM-dd hh:mm:ss",
+            new Date(this.detailData.createTime)
+          );
+          this.detailData.timestamp = dateFormat.format(
+            "yyyy-MM-dd hh:mm:ss",
+            new Date(this.detailData.timestamp)
+          );
+          if (this.detailData.type == "") {
+            //类型为空
             this.haveImg = false;
-          } else if (this.detailData.type == 'IMAGE') {//图片
+          } else if (this.detailData.type == "IMAGE") {
+            //图片
             this.haveImg = false;
-            this.detailData.imgUrl = JSON.parse(this.detailData.detail)[0].imgUrl;
-          } else if (this.detailData.type == 'INDEX') {//目录
+            this.detailData.imgUrl = JSON.parse(
+              this.detailData.detail
+            )[0].imgUrl;
+          } else if (this.detailData.type == "INDEX") {
+            //目录
             this.haveImg = true;
             let textData = JSON.parse(this.detailData.detail).context.text;
             if (!textData) {
@@ -138,28 +168,31 @@ export default {
             this.workData = textData;
             var imgHashData = JSON.parse(this.detailData.detail).context.image;
             for (var i in imgHashData) {
-              this.workData.push(imgHashData[i]);//图片哈希
+              if (imgHashData[i]) {
+                this.imgArr.push(imgHashData[i]);
+              }
             }
-          } else if (this.detailData.type == 'TEXT') {
+          } else if (this.detailData.type == "TEXT") {
             this.haveImg = false;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.fullscreenLoading = false;
-          this.$message({ type: 'error', message: error });
+          this.$message({ type: "error", message: error });
         });
     }
   },
   mounted() {
     this.fullscreenLoading = true;
     this.hash = this.$route.params.id;
-    let type = sessionStorage.getItem('TYPE')
-    if (type === '2c') {
-      this.toUrl = process.env.TOC_API_ROOT + 'api/v1/c/attestation/explorer/hash'
+    let type = sessionStorage.getItem("TYPE");
+    if (type === "2c") {
+      this.toUrl =
+        process.env.TOC_API_ROOT + "api/v1/c/attestation/explorer/hash";
     } else {
-      this.toUrl = process.env.API_ROOT + 'api/v1/attestation/explorer/hash'
+      this.toUrl = process.env.API_ROOT + "api/v1/attestation/explorer/hash";
     }
-    this.getDetail()
+    this.getDetail();
   }
 };
 </script>
@@ -246,6 +279,17 @@ export default {
     overflow: hidden;
     width: 80%;
   }
+}
+.imgBox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.imgBox img {
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
   html {

@@ -2,21 +2,48 @@
   <div id="topBar">
     <el-row type="flex" class="row-bg" justify="end" v-if="noLogin">
       <el-col :span="16">
-        <img id="logo" src="../assets/img/Rectangle.jpg" alt @click="toHomePage">
+        <img
+          id="logo"
+          src="../assets/img/Rectangle.jpg"
+          alt
+          @click="toHomePage"
+        />
       </el-col>
       <el-col :span="8">
-        <el-button type="info" size="mini" round @click="$router.push({ path:'/signin'})">我要存证</el-button>
+        <el-button
+          type="info"
+          size="mini"
+          round
+          @click="$router.push({ path: '/signin' })"
+          >我要存证</el-button
+        >
       </el-col>
     </el-row>
     <el-row type="flex" class="row-bg" justify="end" v-else>
       <el-col :span="12">
-        <img id="logo" src="../assets/img/Rectangle.jpg" alt @click="toHomePage">
+        <img
+          id="logo"
+          src="../assets/img/Rectangle.jpg"
+          alt
+          @click="toHomePage"
+        />
       </el-col>
       <el-col :span="12" style="text-align:right;">
-        <img src="../assets/img/avatar.png" style="width:3rem;" alt>
-        <span>{{username}}</span>
-        <el-button type="info" round size="mini" @click="signOut">退出登录</el-button>
-        <el-button type="info" round size="mini" @click="toNewEvidence">我要存证</el-button>
+        <img src="../assets/img/avatar.png" style="width:3rem;" alt />
+        <span>{{ username }}</span>
+        <el-button type="info" round size="mini" @click="signOut"
+          >退出登录</el-button
+        >
+        <el-button type="info" round size="mini" @click="toNewEvidence"
+          >我要存证</el-button
+        >
+        <el-button
+          type="info"
+          round
+          size="mini"
+          @click="$router.push({ name: 'evidenceRecord' })"
+          >存证记录</el-button
+        >
       </el-col>
     </el-row>
   </div>
@@ -26,74 +53,78 @@
 export default {
   data() {
     return {
-      cusor: 'cusor',
-      noLogin: true,//默认未登录
-      username: ''//用户名
-    }
+      cusor: "cusor",
+      noLogin: true, //默认未登录
+      username: "" //用户名
+    };
   },
   methods: {
-    toLogin() {//登录
-      var callback_url = window.location.origin + '/#/newEvidence';
+    toLogin() {
+      //登录
+      var callback_url = window.location.origin + "/#/newEvidence";
       // var appontid = 'did:ont:ANqiHycikgyzkfz36faP5ymXLVg1uovhXh';
-      var appname = 'OntSourcing';
-      var value = window.encodeURIComponent(process.env.APP_ONTID + '&' + appname + '&' + callback_url + '&' + 'zh');
+      var appname = "OntSourcing";
+      var value = window.encodeURIComponent(
+        process.env.APP_ONTID + "&" + appname + "&" + callback_url + "&" + "zh"
+      );
       // window.location.href = "http://139.219.136.188:10390?params=" + value;
       window.location.href = process.env.ONTID_SIGININ + value;
     },
     toNewEvidence() {
-      this.$router.push({ name: 'newEvidence' });
+      this.$router.push({ name: "newEvidence" });
     },
-    toHomePage() {//首页
-      if (this.$route.name == 'Home') {
+    toHomePage() {
+      //首页
+      if (this.$route.name == "Home") {
         window.location.reload();
       } else {
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: "Home" });
       }
     },
-    signOut() {//退出
-      this.$confirm('确定退出当前登录吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {//确定
-        this.noLogin = true,//默认未登录
-          sessionStorage.removeItem("ontid");
-        sessionStorage.removeItem("access_token");
-        sessionStorage.clear();
-        this.$router.push({ name: 'Home' });
-      }).catch(() => {
-
-      });
-
+    signOut() {
+      //退出
+      this.$confirm("确定退出当前登录吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          //确定
+          (this.noLogin = true), //默认未登录
+            sessionStorage.removeItem("ontid");
+          sessionStorage.removeItem("access_token");
+          sessionStorage.clear();
+          this.$router.push({ name: "Home" });
+        })
+        .catch(() => {});
     }
   },
-  mounted() {//得到token值保存session
+  mounted() {
+    //得到token值保存session
     if (sessionStorage.getItem("ontid")) {
       this.noLogin = false;
       this.username = sessionStorage.getItem("ontid");
-      this.username = this.username.replace(/ont/, 'dna')
-    }
-    else {
+      this.username = this.username.replace(/ont/, "dna");
+    } else {
       var result = this.$route.query.result;
 
       if (result) {
         var response = JSON.parse(decodeURIComponent(result));
         if (!response.ontid || !response.access_token) {
-          this.$message({ type: 'error', message: '登录失败，请重试！' });
-          this.$router.push({ name: 'Home' });
-          return
+          this.$message({ type: "error", message: "登录失败，请重试！" });
+          this.$router.push({ name: "Home" });
+          return;
         }
         sessionStorage.setItem("ontid", response.ontid);
         sessionStorage.setItem("access_token", response.access_token);
         this.username = sessionStorage.getItem("ontid");
-        this.username = this.username.replace(/ont/, 'dna')
+        this.username = this.username.replace(/ont/, "dna");
         this.noLogin = false;
       }
     }
   }
-}
+};
 </script>
-
 
 <style scoped>
 #topBar {
