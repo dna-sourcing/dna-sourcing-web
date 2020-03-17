@@ -32,7 +32,7 @@
             <div class="crypto">uploadTime</div>
             <div class="upload">{{ detailData._createTime }}</div>
           </div>
-          <div class="work-logo absolute"></div>
+          <!-- <div class="work-logo absolute"></div> -->
           <div class="work-hash absolute">
             <div class="hash">WorkHash:{{ detailData.txhash }}</div>
           </div>
